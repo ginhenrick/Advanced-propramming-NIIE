@@ -1,0 +1,66 @@
+class Phanso
+    tuso: int
+    mauso: int
+
+def gcd(a, b):
+    while b:
+        a, b = b, a % b
+    return a
+'''gcd: greatest common divisor
+ hàm tìm ước chung lớn nhất '''
+
+def rutgonphanso(tuso, mauso):
+    gcd_tuso_mauso = gcd(tuso, mauso)
+    return tuso // gcd_tuso_mauso, mauso // gcd_tuso_mauso
+'''Hàm rút gọn phân số: bằng cách sau khi tìm được gcd thì lấy tử chia cho mẫu'''
+
+
+def mausochung(a, b):
+    return abs(a * b) // gcd(a, b)
+'''Để cộng hai phân số, cần tìm mẫu số chung của chúng'''
+
+
+def congphanso(tuso1, mauso1, tuso2, mauso2, sum_tuso=None):
+    mausochung_mauso = mausochung(mauso1, mauso2)
+    phanso1 = mausochung_mauso // mauso1
+    phanso2 = mausochung_mauso // mauso2
+    new_tuso1 = tuso1 * phanso1
+    new_tuso2 = tuso2 * phanso2
+    tong_tu = new_tuso1 + new_tuso2
+    return congphanso(sum_tuso, mausochung_mauso)
+'''Sau khi có được mẫu số chung, có thể cộng 2 phân số bằng cách nhân tử và mẫu cho mỗi phân số với hệ số để chúng có cùng mẫu số, sau đó cộng tử số lại với nhau'''
+
+
+def nhanphanso(tuso1, mauso1, tuso2, mauso2):
+    new_tuso = tuso1 * tuso2
+    new_mauso = mauso1 * mauso2
+    return rutgonphanso(new_tuso, new_mauso)
+'''nhân tử số với tử số và nhân mẫu số với mẫu số'''
+
+
+class Phanso:
+    def __init__(self, tuso, mauso):
+        self.tuso = tuso
+        self.mauso = mauso
+ '''Định nghĩa Phân số'''
+
+    def __add__(self, other):
+        new_tuso, new_mauso = congphanso(self.tuso, self.mauso, other.tuso, other.mauso)
+        return Phanso(new_tuso, new_mauso)
+        '''Định nghĩa toán tử "+" '''
+
+    def __mul__(self, other):
+        new_tuso, new_mauso = nhanphanso(self.tuso, self.mauso, other.tuso, other.mauso)
+        return Phanso(new_tuso, new_mauso)
+    '''Định nghĩa toán tử "*" '''
+    def __eq__(self, other):
+        return self.tuso == other.tuso and self.mauso == other.mauso
+    '''Định nghĩa toán tử "==" '''
+    def __lt__(self, other):
+        mausochung_mauso = mausochung(self.mauso, other.mauso)
+        Phanso1 = mausochung_mauso // self.mauso
+        Phanso2 = mausochung_mauso // other.mauso
+        new_tuso1 = self.tuso * Phanso1
+        new_tuso2 = other.tuso * Phanso2
+        return new_tuso1 < new_tuso2
+    '''Định nghĩa toán tử "<"'''
